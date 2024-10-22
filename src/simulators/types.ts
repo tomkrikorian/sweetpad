@@ -137,4 +137,74 @@ export class watchOSSimulatorDestination implements IDestination {
   }
 }
 
-export type SimulatorDestination = iOSSimulatorDestination | watchOSSimulatorDestination;
+export class visionOSSimulatorDestination implements IDestination {
+  type = "visionOSSimulator" as const;
+  typeLabel = "visionOS";
+  platform = "xros" as const;
+
+  // ex. BFA2A2FD-23A3-4593-BEC3-CDB9A5198877
+  public udid: string;
+  public isAvailable: boolean;
+  public state: "Booted" | "Shutdown";
+  // ex. Apple Vision Pro
+  public name: string;
+  public simulatorType: "AppleVision";
+  public os: "xrOS";
+  // ex. 2.0
+  public osVersion: string;
+  // ex. com.apple.CoreSimulator.SimDeviceType.Apple-Vision-Pro
+  public rawDeviceTypeIdentifier: string;
+  // ex. com.apple.CoreSimulator.SimRuntime.xrOS-2-0
+  public rawRuntime: string;
+
+  constructor(options: {
+    udid: string;
+    isAvailable: boolean;
+    state: "Booted" | "Shutdown";
+    name: string;
+    simulatorType: "AppleVision";
+    os: "xrOS";
+    osVersion: string;
+    rawDeviceTypeIdentifier: string;
+    rawRuntime: string;
+  }) {
+    this.udid = options.udid;
+    this.isAvailable = options.isAvailable;
+    this.state = options.state;
+    this.name = options.name;
+    this.simulatorType = options.simulatorType;
+    this.os = options.os;
+    this.osVersion = options.osVersion;
+    this.rawDeviceTypeIdentifier = options.rawDeviceTypeIdentifier;
+    this.rawRuntime = options.rawRuntime;
+  }
+
+  get id(): string {
+    return `visionossimulator-${this.udid}`;
+  }
+
+  get isBooted(): boolean {
+    return this.state === "Booted";
+  }
+
+  get label(): string {
+    // Apple Vision Pro (2.0)
+    return `${this.name} (${this.osVersion})`;
+  }
+
+  get quickPickDetails(): string {
+    return `Type: ${this.typeLabel}, Version: ${this.osVersion}, ID: ${this.udid.toLocaleLowerCase()}`;
+  }
+
+  get icon(): string {
+    if (this.isBooted) {
+      return "sweetpad-device-vision";
+    }
+    return "sweetpad-device-vision-pause";
+  }
+}
+
+export type SimulatorDestination =
+  | iOSSimulatorDestination
+  | watchOSSimulatorDestination
+  | visionOSSimulatorDestination;

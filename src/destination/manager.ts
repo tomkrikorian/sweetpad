@@ -3,7 +3,7 @@ import type { ExtensionContext } from "../common/commands";
 import type { DevicesManager } from "../devices/manager";
 import type { iOSDeviceDestination } from "../devices/types";
 import type { SimulatorsManager } from "../simulators/manager";
-import type { SimulatorDestination, iOSSimulatorDestination, watchOSSimulatorDestination } from "../simulators/types";
+import type { SimulatorDestination, iOSSimulatorDestination, watchOSSimulatorDestination, visionOSSimulatorDestination } from "../simulators/types";
 import { DESTINATION_TYPE_PRIORITY, SIMULATOR_TYPE_PRIORITY, SUPPORTED_DESTINATION_PLATFORMS } from "./constants";
 import type { DestinationPlatform } from "./constants";
 import {
@@ -115,6 +115,11 @@ export class DestinationsManager {
     return items.filter((simulator) => simulator.type === "iOSSimulator");
   }
 
+  async getVisionOSSimulators(): Promise<visionOSSimulatorDestination[]> {
+    const simulators = await this.simulatorsManager.getSimulators();
+    return simulators.filter((simulator) => simulator.type === "visionOSSimulator");
+  }
+
   async getwatchOSSimulators(): Promise<watchOSSimulatorDestination[]> {
     const simulators = await this.simulatorsManager.getSimulators();
     return simulators.filter((simulator) => simulator.type === "watchOSSimulator");
@@ -193,6 +198,11 @@ export class DestinationsManager {
     if (platforms.includes("macosx")) {
       const macosDevcices = await this.getmacOSDevices();
       destinations.push(...macosDevcices);
+    }
+
+    if (platforms.includes("xrsimulator")) {
+      const simulators = await this.getVisionOSSimulators();
+      destinations.push(...simulators);
     }
 
     // Most used destinations should be on top of the list

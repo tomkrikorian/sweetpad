@@ -2,7 +2,7 @@ import events from "node:events";
 import { type SimulatorOutput, getSimulators } from "../common/cli/scripts";
 import { commonLogger } from "../common/logger";
 import { assertUnreachable } from "../common/types";
-import { type SimulatorDestination, iOSSimulatorDestination, watchOSSimulatorDestination } from "./types";
+import { type SimulatorDestination, iOSSimulatorDestination, watchOSSimulatorDestination, visionOSSimulatorDestination } from "./types";
 import { parseDeviceTypeIdentifier, parseSimulatorRuntime } from "./utils";
 
 type IEventMap = {
@@ -27,7 +27,7 @@ export class SimulatorsManager {
   private prepareSimulator(rawRuntime: string, simulator: SimulatorOutput): SimulatorDestination | null {
     const simulatorType = parseDeviceTypeIdentifier(simulator.deviceTypeIdentifier);
     if (!simulatorType) {
-      commonLogger.log("Can not parse device type", {
+      commonLogger.log("Cannot parse device type", {
         runtime: rawRuntime,
         simulator: simulator,
       });
@@ -69,12 +69,21 @@ export class SimulatorsManager {
         rawRuntime: rawRuntime,
       });
     }
-    if (runtime.os === "tvOS") {
-      // todo: add tvOS simulator support
-      return null;
-    }
     if (runtime.os === "xrOS") {
-      // todo: add xrOS simulator support
+      return new visionOSSimulatorDestination({
+        udid: simulator.udid,
+        isAvailable: simulator.isAvailable,
+        state: simulator.state as "Booted",
+        name: simulator.name,
+        simulatorType: simulatorType as "AppleVision",
+        os: runtime.os,
+        osVersion: runtime.version,
+        rawDeviceTypeIdentifier: simulator.deviceTypeIdentifier,
+        rawRuntime: rawRuntime,
+      });
+    }
+    if (runtime.os === "tvOS") {
+      // TODO: Add tvOS simulator support
       return null;
     }
     assertUnreachable(runtime.os);

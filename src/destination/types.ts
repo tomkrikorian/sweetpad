@@ -3,7 +3,7 @@ import type { iOSSimulatorDestination, watchOSSimulatorDestination } from "../si
 import type { DestinationPlatform } from "./constants";
 
 // Sometimes it can be called as "platform" or "DestinationPlatform"
-export type DestinationType = "iOSSimulator" | "iOSDevice" | "macOS" | "watchOSSimulator";
+export type DestinationType = "iOSSimulator" | "iOSDevice" | "macOS" | "watchOSSimulator" | "visionOSSimulator";
 
 export type DestinationArch = "arm64" | "x86_64";
 
@@ -12,6 +12,7 @@ export const ALL_DESTINATION_TYPES: DestinationType[] = [
   "iOSDevice",
   "macOS",
   "watchOSSimulator",
+  "visionOSSimulator"
   // "watchOSDevice",
 ];
 
