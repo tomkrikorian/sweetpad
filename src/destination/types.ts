@@ -1,5 +1,5 @@
 import type { iOSDeviceDestination } from "../devices/types";
-import type { iOSSimulatorDestination, watchOSSimulatorDestination } from "../simulators/types";
+import type { iOSSimulatorDestination, watchOSSimulatorDestination, visionOSSimulatorDestination } from "../simulators/types";
 import type { DestinationPlatform } from "./constants";
 
 // Sometimes it can be called as "platform" or "DestinationPlatform"
@@ -63,9 +63,10 @@ export class macOSDestination implements IDestination {
 
 export type Destination =
   | iOSSimulatorDestination
+  | watchOSSimulatorDestination
+  | visionOSSimulatorDestination
   | iOSDeviceDestination
-  | macOSDestination
-  | watchOSSimulatorDestination;
+  | macOSDestination;
 
 /**
  * Lightweight representation of a selected destination that can be stored in the workspace state (we can't
